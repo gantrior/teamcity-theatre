@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Options;
 using RestSharp;
+using TeamCityTheatre.Core.Options;
 
 namespace TeamCityTheatre.Core.Client {
   public class TeamCityClient : ITeamCityClient {
@@ -9,12 +11,13 @@ namespace TeamCityTheatre.Core.Client {
     readonly ITeamCityRequestPreparer _teamCityRequestPreparer;
 
     public TeamCityClient(
-      ITeamCityRestClientFactory teamCityRestClientFactory, IConnectionSettings connectionSettings,
+      ITeamCityRestClientFactory teamCityRestClientFactory, IOptionsSnapshot<ConnectionOptions> connectionOptionsSnapshot,
       IResponseValidator responseValidator, ITeamCityRequestPreparer teamCityRequestPreparer) {
-      if (connectionSettings == null) throw new ArgumentNullException(nameof(connectionSettings));
+      if (connectionOptionsSnapshot == null) throw new ArgumentNullException(nameof(connectionOptionsSnapshot));
+      var connectionOptions = connectionOptionsSnapshot.Value;
       _responseValidator = responseValidator ?? throw new ArgumentNullException(nameof(responseValidator));
       _teamCityRequestPreparer = teamCityRequestPreparer ?? throw new ArgumentNullException(nameof(teamCityRequestPreparer));
-      _client = teamCityRestClientFactory?.Create(connectionSettings) ?? throw new ArgumentNullException(nameof(teamCityRestClientFactory));
+      _client = teamCityRestClientFactory?.Create(connectionOptions) ?? throw new ArgumentNullException(nameof(teamCityRestClientFactory));
     }
 
     public async Task<TResponse> ExecuteRequestAsync<TResponse>(IRestRequest restRequest) where TResponse : new() {

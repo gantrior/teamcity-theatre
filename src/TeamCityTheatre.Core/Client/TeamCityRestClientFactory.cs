@@ -1,14 +1,15 @@
 ﻿using System;
 using RestSharp;
 using RestSharp.Authenticators;
+using TeamCityTheatre.Core.Options;
 
 namespace TeamCityTheatre.Core.Client {
   public class TeamCityRestClientFactory : ITeamCityRestClientFactory {
-    public IRestClient Create(IConnectionSettings connectionSettings) {
-      if (connectionSettings == null) throw new ArgumentNullException(nameof(connectionSettings));
+    public IRestClient Create(ConnectionOptions connectionOptions) {
+      if (connectionOptions == null) throw new ArgumentNullException(nameof(connectionOptions));
       return new RestClient {
-        BaseUrl = new Uri(connectionSettings.Url, new Uri("httpAuth/app/rest", UriKind.Relative)),
-        Authenticator = new HttpBasicAuthenticator(connectionSettings.Username, connectionSettings.Password),
+        BaseUrl = new Uri(connectionOptions.Url, new Uri("httpAuth/app/rest", UriKind.Relative)),
+        Authenticator = new HttpBasicAuthenticator(connectionOptions.Username, connectionOptions.Password),
         DefaultParameters = {
           new Parameter {Type = ParameterType.HttpHeader, Name = "Accept", Value = "application/json"}
         }

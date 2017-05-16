@@ -1,15 +1,18 @@
 ﻿using System.IO;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using TeamCityTheatre.Core.ApplicationModels;
+using TeamCityTheatre.Core.Options;
 
 namespace TeamCityTheatre.Core.Repositories {
   public class ConfigurationRepository : IConfigurationRepository {
     readonly DirectoryInfo _workspace;
     readonly FileInfo _configurationFile;
 
-    public ConfigurationRepository(ITeamCityTheatreSettings settings) {
-      _workspace = settings.Workspace;
-      _configurationFile = new FileInfo(Path.Combine(_workspace.FullName, settings.ConfigurationFileName));
+    public ConfigurationRepository(IOptionsSnapshot<StorageOptions> storageOptionsSnapshot) {
+      var storageOptions = storageOptionsSnapshot.Value;
+      _configurationFile = new FileInfo(storageOptions.ConfigurationFile);
+      _workspace = _configurationFile.Directory;
     }
 
     public Configuration GetConfiguration() {

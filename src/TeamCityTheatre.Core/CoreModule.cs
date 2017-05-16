@@ -1,6 +1,5 @@
 ﻿using System.Linq;
 using Autofac;
-using TeamCityTheatre.Core.Client;
 
 namespace TeamCityTheatre.Core {
   public class CoreModule : Module {
@@ -11,9 +10,6 @@ namespace TeamCityTheatre.Core {
         .Where(t => knownSuffixes.Any(suffix => t.Name.EndsWith(suffix)))
         .AsImplementedInterfaces()
         .InstancePerLifetimeScope();
-
-      builder.Register(ctx => TeamCityConnectionSettings.Instance).As<IConnectionSettings>().InstancePerLifetimeScope();
-      builder.Register(ctx => new TeamCityTheatreSettings()).As<ITeamCityTheatreSettings>().InstancePerLifetimeScope();
     }
   }
 }
