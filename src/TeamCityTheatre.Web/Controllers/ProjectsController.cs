@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using TeamCityTheatre.Core.DataServices;
+using TeamCityTheatre.Core.DataServices.Locators;
 using TeamCityTheatre.Core.Models;
 
 namespace TeamCityTheatre.Web.Controllers {
@@ -15,28 +15,16 @@ namespace TeamCityTheatre.Web.Controllers {
       _projectDataService = projectDataService ?? throw new ArgumentNullException(nameof(projectDataService));
     }
 
-    // GET: api/values
+    // GET: api/projects
     [HttpGet]
     public async Task<IEnumerable<IBasicProject>> GetAsync() {
       return await _projectDataService.GetAllProjectsAsync();
     }
 
-    // GET api/values/5
+    // GET api/projects/broka-50x
     [HttpGet("{id}")]
-    public string Get(int id) {
-      return "value";
+    public async Task<IDetailedProject> GetAsync(string id) {
+      return await _projectDataService.GetProjectDetailsAsync(new ProjectByIdLocator(id));
     }
-
-    // POST api/values
-    [HttpPost]
-    public void Post([FromBody] string value) { }
-
-    // PUT api/values/5
-    [HttpPut("{id}")]
-    public void Put(int id, [FromBody] string value) { }
-
-    // DELETE api/values/5
-    [HttpDelete("{id}")]
-    public void Delete(int id) { }
   }
 }
