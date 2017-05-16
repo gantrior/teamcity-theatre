@@ -5,7 +5,7 @@ using TeamCityTheatre.Core.QueryServices;
 using TeamCityTheatre.Core.QueryServices.Models;
 
 namespace TeamCityTheatre.Web.Controllers {
-  [Route("api/projects")]
+  [Route("api/viewdata")]
   public class ViewDataController : Controller {
     readonly IViewService _viewsService;
 

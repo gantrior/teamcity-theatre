@@ -1,0 +1,13 @@
+﻿@model TeamCityTheatre.Web.Views.Home.DashboardViewModel
+
+@section scripts {
+  <script>
+    window.settings = {
+      "pollingTimeOutInMilliSeconds": @Model.PollingTimeOutInMilliSeconds
+    };
+  </script>
+  <script src="~/js/vendor.js"></script>
+  <script src="~/js/dashboard.js"></script>
+}
+
+<div id="root"></div>

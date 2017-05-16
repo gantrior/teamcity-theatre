@@ -1,0 +1,28 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "importHelpers": true,
+    "jsx": "react",
+    "lib": [ "dom", "es5", "es2015.promise" ],
+    "module": "es2015",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "noEmitOnError": true,
+    "noEmitHelpers": true,
+    "outDir": "./AppCompiled",
+    "removeComments": false,
+    "sourceMap": true,
+    "target": "es5",
+    "typeRoots": [
+      "./node_modules/@types"
+    ]
+  },
+  "include": [
+    "./App/**/*.ts",
+    "./App/**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "wwwroot"
+  ]
+}

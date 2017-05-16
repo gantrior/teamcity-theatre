@@ -1,9 +1,8 @@
-﻿using System;
-
-namespace TeamCityTheatre.Core.Options {
+﻿namespace TeamCityTheatre.Core.Options {
   public class ConnectionOptions {
-    public Uri Url { get; set; }
+    public string Url { get; set; }
     public string Username { get; set; }
     public string Password { get; set; }
+    public int PollingTimeOutInMilliseconds { get; set; }
   }
 }

@@ -8,7 +8,7 @@ namespace TeamCityTheatre.Core.Client {
     public IRestClient Create(ConnectionOptions connectionOptions) {
       if (connectionOptions == null) throw new ArgumentNullException(nameof(connectionOptions));
       return new RestClient {
-        BaseUrl = new Uri(connectionOptions.Url, new Uri("httpAuth/app/rest", UriKind.Relative)),
+        BaseUrl = new Uri(new Uri(connectionOptions.Url), new Uri("httpAuth/app/rest", UriKind.Relative)),
         Authenticator = new HttpBasicAuthenticator(connectionOptions.Username, connectionOptions.Password),
         DefaultParameters = {
           new Parameter {Type = ParameterType.HttpHeader, Name = "Accept", Value = "application/json"}
