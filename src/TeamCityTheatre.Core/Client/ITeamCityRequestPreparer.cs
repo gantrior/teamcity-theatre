@@ -1,9 +1,7 @@
-﻿
-using RestSharp;
+﻿using RestSharp;
 
 namespace TeamCityTheatre.Core.Client {
-  public interface ITeamCityRequestPreparer
-  {
+  public interface ITeamCityRequestPreparer {
     void Prepare(IRestRequest request);
   }
 }

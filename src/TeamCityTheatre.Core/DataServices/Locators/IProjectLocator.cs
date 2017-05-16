@@ -1,3 +1,3 @@
 ﻿namespace TeamCityTheatre.Core.DataServices.Locators {
-  public interface IProjectLocator : ILocator {}
+  public interface IProjectLocator : ILocator { }
 }

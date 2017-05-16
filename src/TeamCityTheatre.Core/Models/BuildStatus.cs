@@ -1,7 +1,5 @@
-﻿namespace TeamCityTheatre.Core.Models
-{
-  public enum BuildStatus
-  {
+﻿namespace TeamCityTheatre.Core.Models {
+  public enum BuildStatus {
     Unknown,
     Success,
     Failure,

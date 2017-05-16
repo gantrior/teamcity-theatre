@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Converters;
 
 namespace TeamCityTheatre.Core.Models {
   public class Build : IDetailedBuild {

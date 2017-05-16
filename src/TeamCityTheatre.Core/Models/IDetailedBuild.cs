@@ -134,7 +134,7 @@ namespace TeamCityTheatre.Core.Models {
 }
    */
 
-  public interface IDetailedBuild: IBasicBuild {
+  public interface IDetailedBuild : IBasicBuild {
     string StatusText { get; }
     IBasicBuildConfiguration BuildConfiguration { get; }
     DateTime QueuedDate { get; }

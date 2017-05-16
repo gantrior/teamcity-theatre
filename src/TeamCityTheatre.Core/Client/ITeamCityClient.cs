@@ -3,7 +3,6 @@ using RestSharp;
 
 namespace TeamCityTheatre.Core.Client {
   public interface ITeamCityClient {
-    TResponse ExecuteRequest<TResponse>(IRestRequest restRequest) where TResponse : new();
-    Task<TResponse> ExecuteRequestAsync<TResponse>(IRestRequest restRequest);
+    Task<TResponse> ExecuteRequestAsync<TResponse>(IRestRequest restRequest) where TResponse : new();
   }
 }

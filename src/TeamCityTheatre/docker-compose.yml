@@ -1,0 +1,8 @@
+version: '2'
+
+services:
+  teamcitytheatre.web:
+    image: teamcitytheatre.web
+    build:
+      context: ./TeamCityTheatre.Web
+      dockerfile: Dockerfile
