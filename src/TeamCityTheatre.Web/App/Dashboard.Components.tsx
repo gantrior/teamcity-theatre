@@ -1,9 +1,10 @@
 ﻿import { createElement } from "react";
 import { selectView } from "./Dashboard.Core";
 import { IView, IViewData, ITileData, BuildStatus, IDetailedBuild } from "./Models";
+import * as parse from "date-fns/parse";
+import * as format from "date-fns/format";
 
-/**
- * Root dispatching component
+/**Root dispatching component
  */
 export const Dashboard =
   (props: { views: IView[] | null, selectedView: IView | null, selectedViewData: IViewData | null }) => {
@@ -26,7 +27,7 @@ export const Dashboard =
 /**
  * List of views to choose from
  */
-export const Views = (props: { views: IView[] }) => (
+const Views = (props: { views: IView[] }) => (
   <div id="views">
     {props.views.map(view => (
       <a className="btn btn-primary view" id={view.id} onClick={() => selectView(view)}>
@@ -38,7 +39,7 @@ export const Views = (props: { views: IView[] }) => (
 /**
  * Details of a single view
  */
-export const View = (props: { view: IView, data: IViewData }) => (
+const View = (props: { view: IView, data: IViewData }) => (
   <div id={props.view.id}>
     <div id="tiles">
       <div className="tiles-wrapper">
@@ -51,7 +52,7 @@ export const View = (props: { view: IView, data: IViewData }) => (
 /**
  * A single tile of a view
  */
-export const Tile = (props: { view: IView, data: ITileData }) => {
+const Tile = (props: { view: IView, data: ITileData }) => {
   const buildStatus = BuildStatus[props.data.combinedBuildStatus].toLowerCase();
   const height = `height-${props.view.defaultNumberOfBranchesPerTile}`;
   return (
@@ -67,7 +68,7 @@ export const Tile = (props: { view: IView, data: ITileData }) => {
 /**
  * A single build in a tile
  */
-export const Build = (props: { build: IDetailedBuild }) => {
+const Build = (props: { build: IDetailedBuild }) => {
   const isFinished = props.build.state === "finished";
   const isRunning = props.build.state === "running";
   const isSuccess = props.build.status === BuildStatus.Success;
@@ -76,15 +77,39 @@ export const Build = (props: { build: IDetailedBuild }) => {
   const percentageCompleted = isFinished ? 100 : props.build.percentageComplete;
   const progressBarTheme = isSuccess ? "progress-bar-success" : "progress-bar-danger";
   const progressBarAnimation = isRunning ? "progress-bar-striped active" : "";
+
+  //const remaining = !!props.build.estimatedTotalSeconds && !!props.build.elapsedSeconds
+  //  ? build.
   return (
     <div id={props.build.id} className={`tile-build ${buildStatus}`}>
       <div className="progress">
         <div className={`progress-bar ${progressBarTheme} ${progressBarAnimation}`} style={{ width: `${percentageCompleted}%` }}>
           <span className="branch">{props.build.branchName}</span>
-          { isFinished ? <span className="execution-timestamp">{props.build.startDate}</span> : null }
-          { isRunning  ? <span className="remaining">{  }</span> : null }
+          {isFinished ? <FinishDate build={props.build} /> : null }
+          {isRunning ? <TimeRemaining build={props.build} /> : null }
         </div>
       </div>
     </div>
   );
+}
+
+const FinishDate = (props: { build: IDetailedBuild }) => {
+  const finishDate = parse(props.build.finishDate);
+  return (<span className="execution-timestamp">{format(finishDate, "ddd D MMM YYYY, HH:mm:ss")}</span>);
+};
+
+const formatSeconds = (seconds: number) => {
+  const mins = Math.abs((seconds / 60) | 0);
+  const secs = Math.abs(seconds % 60);
+  if (secs === 0) return `${mins}m`;
+  if (mins === 0) return `${secs}s`;
+  return `${mins}m ${secs}s`;
+}
+
+export const TimeRemaining = (props: { build: IDetailedBuild }) => {
+  const remainingSeconds = props.build.estimatedTotalSeconds - props.build.elapsedSeconds;
+  const isOverTime = remainingSeconds < 0;
+  const label = isOverTime ? "Over time" : "Remaining";
+  const formattedRemainingSeconds = formatSeconds(remainingSeconds);
+  return (<span className="remaining">{`${label}: ${formattedRemainingSeconds}`}</span>);
 }

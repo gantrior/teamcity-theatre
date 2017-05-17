@@ -38,6 +38,23 @@ module.exports = {
       },
       compress: {
         screw_ie8: true,
+        properties: true,
+        drop_debugger: true, // Remove debugger statements
+        drop_console: true, // Remove console statements
+        sequences: true,
+        dead_code: true,
+        conditionals: true,
+        comparisons: true,
+        evaluate: true,
+        booleans: true,
+        unused: true,
+        loops: true,
+        cascade: true,
+        if_return: true,
+        negate_iife: true,
+        hoist_funs: true,
+        hoist_vars: false,
+        join_vars: true,
         warnings: false
       },
       comments: false
