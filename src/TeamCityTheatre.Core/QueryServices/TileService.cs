@@ -16,6 +16,7 @@ namespace TeamCityTheatre.Core.QueryServices {
     public async Task<TileData> GetLatestTileDataAsync(View view, Tile tile) {
       var builds = await _buildDataService.GetBuildsOfBuildConfigurationAsync(tile.BuildConfigurationId, 20);
       return new TileData {
+        Id = tile.Id,
         Label = tile.Label,
         Builds = builds.GroupBy(b => b.BranchName)
           .Select(buildsOfBranch => buildsOfBranch.OrderByDescending(b => b.StartDate).FirstOrDefault())

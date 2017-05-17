@@ -15,10 +15,12 @@ export interface ITile {
 }
 
 export interface IViewData {
+  id: Guid;
   tiles: ITileData[];
 }
 
 export interface ITileData {
+  id: Guid;
   label: string;
   builds: IDetailedBuild[];
   combinedBuildStatus: BuildStatus;
