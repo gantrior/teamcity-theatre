@@ -20,8 +20,8 @@
   },
   "scripts": {
     "compile": "tsc --pretty",
-    "bundle": "webpack --env=dev --progress --profile --colors",
-    "watch": "webpack --env=dev --progress --profile --colors --watch",
-    "release": "webpack --env=prod --progress --profile --colors"
+    "bundle": "webpack --env=dev --progress --colors",
+    "watch": "webpack --env=dev --progress --colors --watch",
+    "release": "webpack --env=prod --progress --colors"
   }
 }

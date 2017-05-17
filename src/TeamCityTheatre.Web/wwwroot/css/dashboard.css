@@ -98,10 +98,6 @@
   color: #eee;
 }
 
-.tile .tile-builds .tile-build .progress .progress-bar.active.progress-bar-success { color: #777; }
-
-.tile .tile-builds .tile-build .progress .progress-bar.active.progress-bar-danger { color: #777; }
-
 .tile .tile-builds .tile-build .progress .progress-bar .branch {
   font-size: 40px;
   line-height: 45px;

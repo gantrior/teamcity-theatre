@@ -1,9 +1,14 @@
 ﻿import { Observable } from "rxjs/Observable";
 import { Subject } from "rxjs/Subject";
 import "rxjs/add/observable/dom/ajax";
+import "rxjs/add/observable/of";
 import "rxjs/add/observable/defer";
 import "rxjs/add/observable/combineLatest";
 
+import "rxjs/add/operator/delay";
+import "rxjs/add/operator/merge";
+import "rxjs/add/operator/mergeMap";
+import "rxjs/add/operator/repeat";
 import "rxjs/add/operator/switchMap";
 import "rxjs/add/operator/startWith";
 
@@ -21,8 +26,13 @@ export const selectedViews: Observable<IView> = selectedViewsSubject;
 
 // fetching the data of a view
 
-export const getSelectedViewData: (selectedViews: Observable<IView>) => Observable<IViewData> = (selectedViews: Observable<IView>) => selectedViews.switchMap(
-  (selectedView: IView) => Observable.ajax.getJSON<IViewData>(`api/viewdata/${selectedView.id}`)
+export const getSelectedViewData: (selectedViews: Observable<IView>) => Observable<IViewData> =
+  (selectedViews: Observable<IView>) => selectedViews.switchMap(
+    (selectedView: IView) => Observable.of(null)
+    .delay(3000)
+    .mergeMap(() => Observable.ajax.getJSON<IViewData>(`api/viewdata/${selectedView.id}`))
+    .repeat()
+    .merge(Observable.ajax.getJSON<IViewData>(`api/viewdata/${selectedView.id}`))
 );
 
 export const selectedViewData = getSelectedViewData(selectedViews);
