@@ -2,7 +2,8 @@ import { createElement } from "react";
 import { selectView } from "./Dashboard.Core";
 import { BuildStatus } from "./Models";
 import * as parse from "date-fns/parse";
-import * as format from "date-fns/format";
+import * as addSeconds from "date-fns/add_seconds";
+import * as distanceInWordsToNow from "date-fns/distance_in_words_to_now";
 /**Root dispatching component
  */
 export var Dashboard = function (props) {
@@ -54,8 +55,6 @@ var Build = function (props) {
     var percentageCompleted = isFinished ? 100 : props.build.percentageComplete;
     var progressBarTheme = isSuccess ? "progress-bar-success" : "progress-bar-danger";
     var progressBarAnimation = isRunning ? "progress-bar-striped active" : "";
-    //const remaining = !!props.build.estimatedTotalSeconds && !!props.build.elapsedSeconds
-    //  ? build.
     return (createElement("div", { id: props.build.id, className: "tile-build " + buildStatus },
         createElement("div", { className: "progress" },
             createElement("div", { className: "progress-bar " + progressBarTheme + " " + progressBarAnimation, style: { width: percentageCompleted + "%" } },
@@ -65,22 +64,12 @@ var Build = function (props) {
 };
 var FinishDate = function (props) {
     var finishDate = parse(props.build.finishDate);
-    return (createElement("span", { className: "execution-timestamp" }, format(finishDate, "ddd D MMM YYYY, HH:mm:ss")));
+    var differenceWithNow = distanceInWordsToNow(finishDate, { includeSeconds: true, addSuffix: true });
+    return (createElement("span", { className: "execution-timestamp" }, "Finished: " + differenceWithNow));
 };
-var formatSeconds = function (seconds) {
-    var mins = Math.abs((seconds / 60) | 0);
-    var secs = Math.abs(seconds % 60);
-    if (secs === 0)
-        return mins + "m";
-    if (mins === 0)
-        return secs + "s";
-    return mins + "m " + secs + "s";
-};
-export var TimeRemaining = function (props) {
-    var remainingSeconds = props.build.estimatedTotalSeconds - props.build.elapsedSeconds;
-    var isOverTime = remainingSeconds < 0;
-    var label = isOverTime ? "Over time" : "Remaining";
-    var formattedRemainingSeconds = formatSeconds(remainingSeconds);
-    return (createElement("span", { className: "remaining" }, label + ": " + formattedRemainingSeconds));
+var TimeRemaining = function (props) {
+    var estimatedFinishDate = addSeconds(parse(props.build.startDate), props.build.estimatedTotalSeconds);
+    var differenceWithNow = distanceInWordsToNow(estimatedFinishDate, { includeSeconds: true, addSuffix: true });
+    return (createElement("span", { className: "remaining" }, "Estimated finish: " + differenceWithNow));
 };
 //# sourceMappingURL=Dashboard.Components.js.map

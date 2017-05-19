@@ -2,7 +2,8 @@
 import { selectView } from "./Dashboard.Core";
 import { IView, IViewData, ITileData, BuildStatus, IDetailedBuild } from "./Models";
 import * as parse from "date-fns/parse";
-import * as format from "date-fns/format";
+import * as addSeconds from "date-fns/add_seconds";
+import * as distanceInWordsToNow from "date-fns/distance_in_words_to_now";
 
 /**Root dispatching component
  */
@@ -77,9 +78,7 @@ const Build = (props: { build: IDetailedBuild }) => {
   const percentageCompleted = isFinished ? 100 : props.build.percentageComplete;
   const progressBarTheme = isSuccess ? "progress-bar-success" : "progress-bar-danger";
   const progressBarAnimation = isRunning ? "progress-bar-striped active" : "";
-
-  //const remaining = !!props.build.estimatedTotalSeconds && !!props.build.elapsedSeconds
-  //  ? build.
+  
   return (
     <div id={props.build.id} className={`tile-build ${buildStatus}`}>
       <div className="progress">
@@ -95,21 +94,12 @@ const Build = (props: { build: IDetailedBuild }) => {
 
 const FinishDate = (props: { build: IDetailedBuild }) => {
   const finishDate = parse(props.build.finishDate);
-  return (<span className="execution-timestamp">{format(finishDate, "ddd D MMM YYYY, HH:mm:ss")}</span>);
+  const differenceWithNow = distanceInWordsToNow(finishDate, { includeSeconds: true, addSuffix: true });
+  return (<span className="execution-timestamp">{`Finished: ${differenceWithNow}`}</span>);
 };
 
-const formatSeconds = (seconds: number) => {
-  const mins = Math.abs((seconds / 60) | 0);
-  const secs = Math.abs(seconds % 60);
-  if (secs === 0) return `${mins}m`;
-  if (mins === 0) return `${secs}s`;
-  return `${mins}m ${secs}s`;
-}
-
-export const TimeRemaining = (props: { build: IDetailedBuild }) => {
-  const remainingSeconds = props.build.estimatedTotalSeconds - props.build.elapsedSeconds;
-  const isOverTime = remainingSeconds < 0;
-  const label = isOverTime ? "Over time" : "Remaining";
-  const formattedRemainingSeconds = formatSeconds(remainingSeconds);
-  return (<span className="remaining">{`${label}: ${formattedRemainingSeconds}`}</span>);
+const TimeRemaining = (props: { build: IDetailedBuild }) => {
+  const estimatedFinishDate = addSeconds(parse(props.build.startDate), props.build.estimatedTotalSeconds);
+  const differenceWithNow = distanceInWordsToNow(estimatedFinishDate, { includeSeconds: true, addSuffix: true });
+  return (<span className="remaining">{`Estimated finish: ${differenceWithNow}`}</span>);
 }
