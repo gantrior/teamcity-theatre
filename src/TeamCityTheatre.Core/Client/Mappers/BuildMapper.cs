@@ -34,7 +34,7 @@ namespace TeamCityTheatre.Core.Client.Mappers {
         BuildConfiguration = _buildConfigurationMapper.Map(build.BuildType),
         FinishDate = build.FinishDate,
         Href = build.Href,
-        IsDefaultBranch = build.DefaultBranch,
+        IsDefaultBranch = build.DefaultBranch || string.Equals(build.BranchName, "develop") || string.Equals(build.BranchName, "master"),
         LastChanges = _buildChangeMapper.Map(build.LastChanges),
         Number = build.Number,
         PercentageComplete = build.PercentageComplete ?? build.RunningInfo?.PercentageComplete,
