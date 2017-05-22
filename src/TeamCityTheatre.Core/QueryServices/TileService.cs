@@ -14,14 +14,20 @@ namespace TeamCityTheatre.Core.QueryServices {
     }
 
     public async Task<TileData> GetLatestTileDataAsync(View view, Tile tile) {
-      var builds = await _buildDataService.GetBuildsOfBuildConfigurationAsync(tile.BuildConfigurationId, 20);
+      var rawBuilds = await _buildDataService.GetBuildsOfBuildConfigurationAsync(tile.BuildConfigurationId, 20);
+      var buildsOrderByStartDate = rawBuilds.OrderByDescending(b => b.StartDate).ToList();
+      var defaultBranchBuild = buildsOrderByStartDate.FirstOrDefault(b => b.IsDefaultBranch);
+      var nonDefaultBranchBuilds = buildsOrderByStartDate.Where(b => !b.IsDefaultBranch)
+        .GroupBy(b => b.BranchName)
+        .Select(buildsPerBranch => buildsPerBranch.OrderByDescending(b => b.StartDate).First())
+        .Take(defaultBranchBuild != null ? view.DefaultNumberOfBranchesPerTile - 1 : view.DefaultNumberOfBranchesPerTile);
+      var builds = defaultBranchBuild != null
+        ? new[] {defaultBranchBuild}.Concat(nonDefaultBranchBuilds)
+        : nonDefaultBranchBuilds;
       return new TileData {
         Id = tile.Id,
         Label = tile.Label,
-        Builds = builds.GroupBy(b => b.BranchName)
-          .Select(buildsOfBranch => buildsOfBranch.OrderByDescending(b => b.StartDate).FirstOrDefault())
-          .Take(view.DefaultNumberOfBranchesPerTile)
-          .ToList()
+        Builds = builds.ToList()
       };
     }
   }

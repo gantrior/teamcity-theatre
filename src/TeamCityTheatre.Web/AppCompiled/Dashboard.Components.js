@@ -28,10 +28,23 @@ var Views = function (props) { return (createElement("div", { id: "views" }, pro
     createElement("span", { className: "badge" },
         view.tiles.length,
         " tiles"))); }))); };
+var tryRequestFullScreen = function (event) {
+    var button = event.currentTarget;
+    var view = button.parentNode;
+    if (view.requestFullscreen)
+        view.requestFullscreen();
+    if (view.webkitRequestFullScreen)
+        view.webkitRequestFullScreen();
+    if (view.webkitRequestFullscreen)
+        view.webkitRequestFullscreen();
+};
 /**
  * Details of a single view
  */
 var View = function (props) { return (createElement("div", { id: props.view.id },
+    createElement("button", { role: "button", className: "btn btn-primary btn-xs", onClick: tryRequestFullScreen },
+        createElement("i", { className: "fa fa-expand" }),
+        " Full screen"),
     createElement("div", { id: "tiles" },
         createElement("div", { className: "tiles-wrapper" }, props.data.tiles.map(function (tile) { return createElement(Tile, { view: props.view, data: tile }); }))))); };
 /**
@@ -51,14 +64,22 @@ var Build = function (props) {
     var isFinished = props.build.state === "finished";
     var isRunning = props.build.state === "running";
     var isSuccess = props.build.status === BuildStatus.Success;
+    var isDefaultBranch = props.build.isDefaultBranch;
     var buildStatus = BuildStatus[props.build.status].toLowerCase();
     var percentageCompleted = isFinished ? 100 : props.build.percentageComplete;
     var progressBarTheme = isSuccess ? "progress-bar-success" : "progress-bar-danger";
     var progressBarAnimation = isRunning ? "progress-bar-striped active" : "";
+    var branchDisplayName = props.build.branchName || props.build.number;
+    var branch = isDefaultBranch
+        ? createElement("span", { className: "branch" },
+            createElement("i", { className: "fa fa-star" }),
+            " ",
+            branchDisplayName)
+        : createElement("span", { className: "branch" }, branchDisplayName);
     return (createElement("div", { id: props.build.id, className: "tile-build " + buildStatus },
         createElement("div", { className: "progress" },
             createElement("div", { className: "progress-bar " + progressBarTheme + " " + progressBarAnimation, style: { width: percentageCompleted + "%" } },
-                createElement("span", { className: "branch" }, props.build.branchName),
+                branch,
                 isFinished ? createElement(FinishDate, { build: props.build }) : null,
                 isRunning ? createElement(TimeRemaining, { build: props.build }) : null))));
 };

@@ -1,4 +1,4 @@
-﻿import { createElement } from "react";
+﻿import { createElement, MouseEvent } from "react";
 import { selectView } from "./Dashboard.Core";
 import { IView, IViewData, ITileData, BuildStatus, IDetailedBuild } from "./Models";
 import * as parse from "date-fns/parse";
@@ -37,11 +37,22 @@ const Views = (props: { views: IView[] }) => (
   </div>
 );
 
+const tryRequestFullScreen = (event: MouseEvent<HTMLButtonElement>) => {
+  const button = event.currentTarget as HTMLButtonElement;
+  const view = button.parentNode as HTMLDivElement;
+  if (view.requestFullscreen) view.requestFullscreen();
+  if (view.webkitRequestFullScreen) view.webkitRequestFullScreen();
+  if (view.webkitRequestFullscreen) view.webkitRequestFullscreen();
+}
+
 /**
  * Details of a single view
  */
 const View = (props: { view: IView, data: IViewData }) => (
   <div id={props.view.id}>
+    <button role="button" className="btn btn-primary btn-xs" onClick={tryRequestFullScreen}>
+      <i className="fa fa-expand"></i> Full screen
+    </button>
     <div id="tiles">
       <div className="tiles-wrapper">
         {props.data.tiles.map(tile => <Tile view={props.view} data={tile}/>) }
@@ -73,18 +84,23 @@ const Build = (props: { build: IDetailedBuild }) => {
   const isFinished = props.build.state === "finished";
   const isRunning = props.build.state === "running";
   const isSuccess = props.build.status === BuildStatus.Success;
+  const isDefaultBranch = props.build.isDefaultBranch;
 
   const buildStatus = BuildStatus[props.build.status].toLowerCase();
   const percentageCompleted = isFinished ? 100 : props.build.percentageComplete;
   const progressBarTheme = isSuccess ? "progress-bar-success" : "progress-bar-danger";
   const progressBarAnimation = isRunning ? "progress-bar-striped active" : "";
-  
+  const branchDisplayName = props.build.branchName || props.build.number;
+  const branch = isDefaultBranch
+    ? <span className="branch"><i className="fa fa-star" /> {branchDisplayName}</span> 
+    : <span className="branch">{branchDisplayName}</span>;
+
   return (
     <div id={props.build.id} className={`tile-build ${buildStatus}`}>
       <div className="progress">
         <div className={`progress-bar ${progressBarTheme} ${progressBarAnimation}`} style={{ width: `${percentageCompleted}%` }}>
-          <span className="branch">{props.build.branchName}</span>
-          {isFinished ? <FinishDate build={props.build} /> : null }
+          {branch}
+          {isFinished ? <FinishDate build={props.build} /> : null}
           {isRunning ? <TimeRemaining build={props.build} /> : null }
         </div>
       </div>
