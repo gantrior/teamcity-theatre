@@ -68,7 +68,7 @@
 
 .tile.success { background: #499649; }
 
-.tile.error { background: #b2423f; }
+.tile.error, .tile.failure { background: #b2423f; }
 
 .tile .tile-builds .tile-build {
   -webkit-box-shadow: 3px 3px 10px 3px rgba(71, 71, 71, 0.5);
