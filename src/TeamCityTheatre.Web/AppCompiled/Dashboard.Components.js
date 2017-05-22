@@ -64,24 +64,26 @@ var Build = function (props) {
     var isFinished = props.build.state === "finished";
     var isRunning = props.build.state === "running";
     var isSuccess = props.build.status === BuildStatus.Success;
-    var isDefaultBranch = props.build.isDefaultBranch;
     var buildStatus = BuildStatus[props.build.status].toLowerCase();
     var percentageCompleted = isFinished ? 100 : props.build.percentageComplete;
     var progressBarTheme = isSuccess ? "progress-bar-success" : "progress-bar-danger";
     var progressBarAnimation = isRunning ? "progress-bar-striped active" : "";
+    return (createElement("div", { id: props.build.id, className: "tile-build " + buildStatus },
+        createElement("div", { className: "progress" },
+            createElement("div", { className: "progress-bar " + progressBarTheme + " " + progressBarAnimation, style: { width: percentageCompleted + "%" } },
+                createElement(Branch, { build: props.build }),
+                isFinished ? createElement(FinishDate, { build: props.build }) : null,
+                isRunning ? createElement(TimeRemaining, { build: props.build }) : null))));
+};
+var Branch = function (props) {
+    var isDefaultBranch = props.build.isDefaultBranch;
     var branchDisplayName = props.build.branchName || props.build.number;
-    var branch = isDefaultBranch
+    return isDefaultBranch
         ? createElement("span", { className: "branch" },
             createElement("i", { className: "fa fa-star" }),
             " ",
             branchDisplayName)
         : createElement("span", { className: "branch" }, branchDisplayName);
-    return (createElement("div", { id: props.build.id, className: "tile-build " + buildStatus },
-        createElement("div", { className: "progress" },
-            createElement("div", { className: "progress-bar " + progressBarTheme + " " + progressBarAnimation, style: { width: percentageCompleted + "%" } },
-                branch,
-                isFinished ? createElement(FinishDate, { build: props.build }) : null,
-                isRunning ? createElement(TimeRemaining, { build: props.build }) : null))));
 };
 var FinishDate = function (props) {
     var finishDate = parse(props.build.finishDate);

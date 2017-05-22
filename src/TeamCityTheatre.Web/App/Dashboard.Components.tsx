@@ -84,28 +84,31 @@ const Build = (props: { build: IDetailedBuild }) => {
   const isFinished = props.build.state === "finished";
   const isRunning = props.build.state === "running";
   const isSuccess = props.build.status === BuildStatus.Success;
-  const isDefaultBranch = props.build.isDefaultBranch;
 
   const buildStatus = BuildStatus[props.build.status].toLowerCase();
   const percentageCompleted = isFinished ? 100 : props.build.percentageComplete;
   const progressBarTheme = isSuccess ? "progress-bar-success" : "progress-bar-danger";
   const progressBarAnimation = isRunning ? "progress-bar-striped active" : "";
-  const branchDisplayName = props.build.branchName || props.build.number;
-  const branch = isDefaultBranch
-    ? <span className="branch"><i className="fa fa-star" /> {branchDisplayName}</span> 
-    : <span className="branch">{branchDisplayName}</span>;
 
   return (
     <div id={props.build.id} className={`tile-build ${buildStatus}`}>
       <div className="progress">
         <div className={`progress-bar ${progressBarTheme} ${progressBarAnimation}`} style={{ width: `${percentageCompleted}%` }}>
-          {branch}
+          {<Branch build={props.build} />}
           {isFinished ? <FinishDate build={props.build} /> : null}
           {isRunning ? <TimeRemaining build={props.build} /> : null }
         </div>
       </div>
     </div>
   );
+}
+
+const Branch = (props: { build: IDetailedBuild }) => {
+  const isDefaultBranch = props.build.isDefaultBranch;
+  const branchDisplayName = props.build.branchName || props.build.number;
+  return isDefaultBranch
+    ? <span className="branch"><i className="fa fa-star"/> {branchDisplayName}</span>
+    : <span className="branch">{branchDisplayName}</span>;
 }
 
 const FinishDate = (props: { build: IDetailedBuild }) => {
