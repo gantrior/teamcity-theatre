@@ -4,7 +4,9 @@ import "rxjs/add/observable/dom/ajax";
 import "rxjs/add/observable/of";
 import "rxjs/add/observable/defer";
 import "rxjs/add/observable/combineLatest";
+import "rxjs/add/observable/empty";
 
+import "rxjs/add/operator/catch";
 import "rxjs/add/operator/delay";
 import "rxjs/add/operator/merge";
 import "rxjs/add/operator/mergeMap";
@@ -30,10 +32,12 @@ export const getSelectedViewData: (selectedViews: Observable<IView>) => Observab
   (selectedViews: Observable<IView>) => selectedViews.switchMap(
     (selectedView: IView) => Observable.of(null)
     .delay(3000)
-    .mergeMap(() => Observable.ajax.getJSON<IViewData>(`api/viewdata/${selectedView.id}`))
+    .mergeMap(() => Observable.ajax.getJSON<IViewData>(`api/viewdata/${selectedView.id}`)
+      .catch(() => Observable.empty<IViewData>()))
     .repeat()
-    .merge(Observable.ajax.getJSON<IViewData>(`api/viewdata/${selectedView.id}`))
-);
+    .merge(Observable.ajax.getJSON<IViewData>(`api/viewdata/${selectedView.id}`)
+      .catch(() => Observable.empty<IViewData>()))
+  );
 
 export const selectedViewData = getSelectedViewData(selectedViews);
 
@@ -45,17 +49,20 @@ export interface IDashboardState {
   selectedViewData: IViewData | null;
 }
 
-export const getState: (allViews: Observable<IView[]>, selectedViews: Observable<IView>, selectedViewData: Observable<IViewData>) => Observable<IDashboardState>
-  = (allViews, selectedViews, selectedViewData) => Observable.combineLatest(
-    allViews.startWith(null), selectedViews.startWith(null), selectedViewData.startWith(null),
+export const getState: (allViews: Observable<IView[]>,
+    selectedViews: Observable<IView>,
+    selectedViewData: Observable<IViewData>) => Observable<IDashboardState> =
+  (allViews, selectedViews, selectedViewData) => Observable.combineLatest(
+    allViews.startWith(null),
+    selectedViews.startWith(null),
+    selectedViewData.startWith(null),
     (views: IView[], selectedView: IView, viewData: IViewData) => {
-    const s: IDashboardState = {
-      views: views,
-      selectedView: selectedView,
-      selectedViewData: viewData
-    };
-    return s;
-});
+      const s: IDashboardState = {
+        views: views,
+        selectedView: selectedView,
+        selectedViewData: viewData
+      };
+      return s;
+    });
 
 export const state = getState(allViews, selectedViews, selectedViewData);
-

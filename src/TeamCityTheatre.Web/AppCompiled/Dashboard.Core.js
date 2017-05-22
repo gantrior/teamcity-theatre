@@ -4,6 +4,8 @@ import "rxjs/add/observable/dom/ajax";
 import "rxjs/add/observable/of";
 import "rxjs/add/observable/defer";
 import "rxjs/add/observable/combineLatest";
+import "rxjs/add/observable/empty";
+import "rxjs/add/operator/catch";
 import "rxjs/add/operator/delay";
 import "rxjs/add/operator/merge";
 import "rxjs/add/operator/mergeMap";
@@ -19,9 +21,11 @@ export var selectedViews = selectedViewsSubject;
 // fetching the data of a view
 export var getSelectedViewData = function (selectedViews) { return selectedViews.switchMap(function (selectedView) { return Observable.of(null)
     .delay(3000)
-    .mergeMap(function () { return Observable.ajax.getJSON("api/viewdata/" + selectedView.id); })
+    .mergeMap(function () { return Observable.ajax.getJSON("api/viewdata/" + selectedView.id)
+    .catch(function () { return Observable.empty(); }); })
     .repeat()
-    .merge(Observable.ajax.getJSON("api/viewdata/" + selectedView.id)); }); };
+    .merge(Observable.ajax.getJSON("api/viewdata/" + selectedView.id)
+    .catch(function () { return Observable.empty(); })); }); };
 export var selectedViewData = getSelectedViewData(selectedViews);
 export var getState = function (allViews, selectedViews, selectedViewData) { return Observable.combineLatest(allViews.startWith(null), selectedViews.startWith(null), selectedViewData.startWith(null), function (views, selectedView, viewData) {
     var s = {
