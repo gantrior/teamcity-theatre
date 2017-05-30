@@ -1,9 +1,10 @@
 import { Observable } from "rxjs/Observable";
 import { Subject } from "rxjs/Subject";
+import "rxjs/add/observable/combineLatest";
 import "rxjs/add/observable/defer";
-import "rxjs/add/observable/empty";
 import "rxjs/add/observable/dom/ajax";
 import "rxjs/add/operator/switchMap";
+import "rxjs/add/operator/startWith";
 var allViews = Observable
     .defer(function () { return Observable.ajax.getJSON("api/views"); })
     .startWith(null);

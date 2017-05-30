@@ -24,6 +24,7 @@ namespace TeamCityTheatre.Web {
 
     // This method gets called by the runtime. Use this method to add services to the container.
     public IServiceProvider ConfigureServices(IServiceCollection services) {
+      services.AddRouting(options => options.LowercaseUrls = true);
       // Add framework services.
       services.AddMvc();
 
@@ -66,7 +67,7 @@ namespace TeamCityTheatre.Web {
       app.UseMvc(routes => {
         routes.MapRoute(
           name: "default",
-          template: "{controller=Home}/{action=Dashboard}/{id?}");
+          template: "{controller=Home}/{action=Index}/{id?}");
       });
     }
   }
