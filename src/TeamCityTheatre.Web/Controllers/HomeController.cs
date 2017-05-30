@@ -6,6 +6,10 @@ namespace TeamCityTheatre.Web.Controllers {
       return View();
     }
 
+    public IActionResult Settings() {
+      return View();
+    }
+
     public IActionResult Error() {
       return View();
     }

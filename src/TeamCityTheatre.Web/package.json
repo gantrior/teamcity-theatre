@@ -16,13 +16,19 @@
   "devDependencies": {
     "@types/react": "^15.0.24",
     "@types/react-dom": "^15.5.0",
+    "postcss-cli": "^4.0.0",
+    "postcss-nested": "^2.0.2",
     "typescript": "^2.3.2",
     "webpack": "^2.5.1"
   },
   "scripts": {
-    "compile": "tsc --pretty",
-    "bundle": "webpack --env=dev --progress --colors",
-    "watch": "webpack --env=dev --progress --colors --watch",
+    "css": "postcss app/*.css --use postcss-nested  --dir wwwroot/css --no-map true",
+    "ts": "tsc --pretty",
+    "js": "webpack --env=dev --progress --colors",
+    "all": "npm run css && npm run ts && npm run js",
+    "watch:css": "postcss app/*.css --use postcss-nested  --dir wwwroot/css --no-map true --watch true",
+    "watch:ts": "tsc --pretty --watch",
+    "watch:js": "webpack --env=dev --progress --colors",
     "release": "webpack --env=prod --progress --colors"
   }
 }

@@ -40,5 +40,8 @@
   <ItemGroup>
     <Folder Include="wwwroot\images\" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Views\Home\Settings.cshtml" />
+  </ItemGroup>
 
 </Project>

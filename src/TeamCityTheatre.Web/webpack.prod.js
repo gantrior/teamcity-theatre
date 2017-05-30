@@ -1,9 +1,10 @@
-﻿var webpack = require("webpack");
-var path = require("path");
+﻿const webpack = require("webpack");
+const path = require("path");
 
 module.exports = {
   entry: {
-    "dashboard": "./AppCompiled/Dashboard.js"
+    "dashboard": "./AppCompiled/Dashboard.js",
+    "settings": "./AppCompiled/Settings.js"
   },
   output: {
     path: path.resolve(__dirname, "wwwroot/js"),
@@ -60,4 +61,4 @@ module.exports = {
       comments: false
     })
   ]
-}
+};

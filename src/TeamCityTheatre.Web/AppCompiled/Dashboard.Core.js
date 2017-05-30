@@ -19,21 +19,18 @@ var selectedViewsSubject = new Subject();
 export var selectView = function (view) { return selectedViewsSubject.next(view); };
 export var selectedViews = selectedViewsSubject;
 // fetching the data of a view
-export var getSelectedViewData = function (selectedViews) { return selectedViews.switchMap(function (selectedView) { return Observable.of(null)
+export var selectedViewData = selectedViews.switchMap(function (selectedView) { return Observable.of(null)
     .delay(3000)
     .mergeMap(function () { return Observable.ajax.getJSON("api/viewdata/" + selectedView.id)
     .catch(function () { return Observable.empty(); }); })
     .repeat()
     .merge(Observable.ajax.getJSON("api/viewdata/" + selectedView.id)
-    .catch(function () { return Observable.empty(); })); }); };
-export var selectedViewData = getSelectedViewData(selectedViews);
-export var getState = function (allViews, selectedViews, selectedViewData) { return Observable.combineLatest(allViews.startWith(null), selectedViews.startWith(null), selectedViewData.startWith(null), function (views, selectedView, viewData) {
-    var s = {
+    .catch(function () { return Observable.empty(); })); });
+export var state = Observable.combineLatest(allViews.startWith(null), selectedViews.startWith(null), selectedViewData.startWith(null), function (views, selectedView, viewData) {
+    return {
         views: views,
         selectedView: selectedView,
         selectedViewData: viewData
     };
-    return s;
-}); };
-export var state = getState(allViews, selectedViews, selectedViewData);
-//# sourceMappingURL=Dashboard.Core.js.map
+});
+//# sourceMappingURL=dashboard.core.js.map

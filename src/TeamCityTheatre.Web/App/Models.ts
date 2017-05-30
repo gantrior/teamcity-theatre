@@ -90,3 +90,18 @@ export interface IPropery {
   name: string;
   value: string;
 }
+
+export interface IBasicProject {
+  isArchived: boolean;
+  href: string;
+  id: string;
+  name: string;
+  description: string;
+  webUrl: string;
+  parentProjectId: string;
+}
+
+export interface IDetailedProject extends IBasicProject {
+  parentProject: IBasicProject
+  buildConfigurations: IBasicBuildConfiguration[];
+}

@@ -1,8 +1,8 @@
 ﻿import { createElement } from "react";
 import { render } from "react-dom";
 
-import { Dashboard } from "./Dashboard.Components";
-import { state } from "./Dashboard.Core";
+import { Dashboard } from "./dashboard.components";
+import { state } from "./dashboard.core";
 
 const root = document.getElementById("root");
 

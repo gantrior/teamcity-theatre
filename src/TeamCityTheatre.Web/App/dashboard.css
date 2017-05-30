@@ -1,4 +1,4 @@
-#views .view {
+﻿#views .view {
   display: block;
   padding: 25px;
   margin: 25px;
@@ -37,49 +37,39 @@
   color: #fff;
   padding: 10px;
   display: inline-block;
-}
 
-.tile.height-1 {
+  &.height-1 {
     height: 185px;
   }
-
-.tile.height-2 {
+  &.height-2 {
     height: 270px;
   }
-
-.tile.height-3 {
+  &.height-3 {
     height: 355px;
   }
-
-.tile.height-4 {
+  &.height-4 {
     height: 440px;
   }
-
-.tile.height-5 {
+  &.height-5 {
     height: 525px;
   }
-
-.tile.height-6 {
+  &.height-6 {
     height: 610px;
   }
-
-.tile.height-7 {
+  &.height-7 {
     height: 695px;
   }
-
-.tile.height-8 {
+  &.height-8 {
     height: 780px;
   }
-
-.tile.height-9 {
+  &.height-9 {
     height: 865px;
   }
-
-.tile.height-10 {
+  &.height-10 {
     height: 950px;
   }
 
-.tile .tile-title {
+  .tile-title {
     display: block;
     font-size: 35px;
     text-align: center;
@@ -88,48 +78,44 @@
     -o-text-overflow: ellipsis;
     text-overflow: ellipsis;
     overflow: hidden;
-  }
 
-.tile .tile-title .tile-status-icon {
+    .tile-status-icon {
       display: none;
     }
-
-.tile.success {
-    background: #499649;
   }
 
-.tile.error, .tile.failure {
+  &.success {
+    background: #499649;
+  }
+  &.error, &.failure {
     background: #b2423f;
   }
 
-.tile .tile-builds .tile-build {
+  .tile-builds .tile-build {
     box-shadow: 3px 3px 10px 3px rgba(71, 71, 71, 0.5);
     border-radius: 15px;
-  }
 
-.tile .tile-builds .tile-build .progress {
+    .progress {
       height: 70px;
       background-color: #888;
 
-    }
-
-.tile .tile-builds .tile-build .progress .progress-bar {
+      .progress-bar {
         text-align: left;
         padding-left: 5px;
         padding-top: 3px;
       }
 
-.tile .tile-builds .tile-build .progress.progress-bar-success {
+      &.progress-bar-success {
         background-color: #5cb85c;
         color: #eee;
       }
 
-.tile .tile-builds .tile-build .progress.progress-bar-danger {
+      &.progress-bar-danger {
         background-color: #d9534f;
         color: #eee;
       }
 
-.tile .tile-builds .tile-build .progress .branch {
+      .branch {
         font-size: 40px;
         line-height: 45px;
         display: block;
@@ -137,10 +123,14 @@
         overflow: visible;
       }
 
-.tile .tile-builds .tile-build .progress .remaining,
-      .tile .tile-builds .tile-build .progress .execution-timestamp {
+      .remaining,
+      .execution-timestamp {
         display: block;
         font-size: 15px;
         white-space: nowrap;
         overflow: visible;
       }
+
+    }
+  }
+}
