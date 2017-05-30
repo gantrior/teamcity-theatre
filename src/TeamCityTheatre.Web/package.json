@@ -22,13 +22,14 @@
     "webpack": "^2.5.1"
   },
   "scripts": {
-    "css": "postcss app/*.css --use postcss-nested  --dir wwwroot/css --no-map true",
     "ts": "tsc --pretty",
-    "js": "webpack --env=dev --progress --colors",
-    "all": "npm run css && npm run ts && npm run js",
-    "watch:css": "postcss app/*.css --use postcss-nested  --dir wwwroot/css --no-map true --watch true",
-    "watch:ts": "tsc --pretty --watch",
-    "watch:js": "webpack --env=dev --progress --colors",
-    "release": "webpack --env=prod --progress --colors"
+    "js": "webpack --config=webpack.dev.js --progress --colors",
+    "css": "postcss app/*.css --use postcss-nested  --dir wwwroot/css --no-map true",
+
+    "watch:ts": "npm run ts -- --watch",
+    "watch:js": "npm run js -- --watch=true",
+    "watch:css": "npm run css -- --watch=true",
+
+    "release:js": "npm run js -- --config=webpack.prod.js"
   }
 }
