@@ -18,18 +18,19 @@
     "@types/react-dom": "^15.5.0",
     "postcss-cli": "^4.0.0",
     "postcss-nested": "^2.0.2",
+    "rimraf": "^2.6.1",
     "typescript": "^2.3.2",
     "webpack": "^2.5.1"
   },
   "scripts": {
+    "clean": "rimraf views/**/*.js views/**/*.js.map views/**/*.css",
     "ts": "tsc --pretty",
     "js": "webpack --config=webpack.dev.js --progress --colors",
-    "css": "postcss app/*.css --use postcss-nested  --dir wwwroot/css --no-map true",
-
+    "pcss": "postcss views/**/*.pcss --use postcss-nested --dir wwwroot/css --no-map true",
     "watch:ts": "npm run ts -- --watch",
     "watch:js": "npm run js -- --watch=true",
     "watch:css": "npm run css -- --watch=true",
 
-    "release:js": "npm run js -- --config=webpack.prod.js"
+    "prod": "npm run ts && npm run pcss && npm run js -- --config=webpack.prod.js"
   }
 }

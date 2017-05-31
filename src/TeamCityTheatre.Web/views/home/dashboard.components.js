@@ -1,6 +1,6 @@
 import { createElement } from "react";
 import { selectView } from "./dashboard.core";
-import { BuildStatus } from "./models";
+import { BuildStatus } from "../Shared/models";
 import * as parse from "date-fns/parse";
 import * as addSeconds from "date-fns/add_seconds";
 import * as distanceInWordsToNow from "date-fns/distance_in_words_to_now";
@@ -95,4 +95,3 @@ var TimeRemaining = function (props) {
     var differenceWithNow = distanceInWordsToNow(estimatedFinishDate, { includeSeconds: true, addSuffix: true });
     return (createElement("span", { className: "remaining" }, "Estimated finish: " + differenceWithNow));
 };
-//# sourceMappingURL=dashboard.components.js.map

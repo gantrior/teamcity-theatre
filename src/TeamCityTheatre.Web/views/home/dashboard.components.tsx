@@ -1,6 +1,6 @@
 ﻿import { createElement, MouseEvent } from "react";
 import { selectView } from "./dashboard.core";
-import { IView, IViewData, ITileData, BuildStatus, IDetailedBuild } from "./models";
+import { IView, IViewData, ITileData, BuildStatus, IDetailedBuild } from "../Shared/models";
 import * as parse from "date-fns/parse";
 import * as addSeconds from "date-fns/add_seconds";
 import * as distanceInWordsToNow from "date-fns/distance_in_words_to_now";
@@ -43,7 +43,7 @@ const tryRequestFullScreen = (event: MouseEvent<HTMLButtonElement>) => {
   if (view.requestFullscreen) view.requestFullscreen();
   if (view.webkitRequestFullScreen) view.webkitRequestFullScreen();
   if (view.webkitRequestFullscreen) view.webkitRequestFullscreen();
-}
+};
 
 /**
  * Details of a single view
@@ -51,7 +51,7 @@ const tryRequestFullScreen = (event: MouseEvent<HTMLButtonElement>) => {
 const View = (props: { view: IView, data: IViewData }) => (
   <div id={props.view.id}>
     <button role="button" className="btn btn-primary btn-xs" onClick={tryRequestFullScreen}>
-      <i className="fa fa-expand"></i> Full screen
+      <i className="fa fa-expand"/> Full screen
     </button>
     <div id="tiles">
       <div className="tiles-wrapper">
@@ -75,7 +75,7 @@ const Tile = (props: { view: IView, data: ITileData }) => {
       </div>
     </div>
   );
-}
+};
 
 /**
  * A single build in a tile
@@ -101,7 +101,7 @@ const Build = (props: { build: IDetailedBuild }) => {
       </div>
     </div>
   );
-}
+};
 
 const Branch = (props: { build: IDetailedBuild }) => {
   const isDefaultBranch = props.build.isDefaultBranch;
@@ -109,7 +109,7 @@ const Branch = (props: { build: IDetailedBuild }) => {
   return isDefaultBranch
     ? <span className="branch"><i className="fa fa-star"/> {branchDisplayName}</span>
     : <span className="branch">{branchDisplayName}</span>;
-}
+};
 
 const FinishDate = (props: { build: IDetailedBuild }) => {
   const finishDate = parse(props.build.finishDate);
@@ -121,4 +121,4 @@ const TimeRemaining = (props: { build: IDetailedBuild }) => {
   const estimatedFinishDate = addSeconds(parse(props.build.startDate), props.build.estimatedTotalSeconds);
   const differenceWithNow = distanceInWordsToNow(estimatedFinishDate, { includeSeconds: true, addSuffix: true });
   return (<span className="remaining">{`Estimated finish: ${differenceWithNow}`}</span>);
-}
+};

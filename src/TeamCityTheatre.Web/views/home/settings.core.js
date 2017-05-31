@@ -25,4 +25,3 @@ export var state = Observable.combineLatest(allViews, allProjects, selectedViews
     selectedView: sv,
     selectedProject: sp
 }); });
-//# sourceMappingURL=settings.core.js.map

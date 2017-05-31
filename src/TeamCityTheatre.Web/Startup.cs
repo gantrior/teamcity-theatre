@@ -66,8 +66,12 @@ namespace TeamCityTheatre.Web {
 
       app.UseMvc(routes => {
         routes.MapRoute(
-          name: "default",
-          template: "{controller=Home}/{action=Index}/{id?}");
+          name: "action",
+          template: "{action=Index}",
+          defaults: new { controller = "Home" });
+        routes.MapRoute(
+          name: "controller+action",
+          template: "{controller}/{action}/{id?}");
       });
     }
   }

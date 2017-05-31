@@ -88,4 +88,3 @@ export var EditTileButton = function (props) { return (createElement("button", {
     createElement("i", { className: "fa fa-pencil" }))); };
 export var DeleteTileButton = function (props) { return (createElement("button", { className: "delete-tile-button btn btn-danger", onClick: function () { }, title: "Delete" },
     createElement("i", { className: "fa fa-remove" }))); };
-//# sourceMappingURL=settings.components.js.map

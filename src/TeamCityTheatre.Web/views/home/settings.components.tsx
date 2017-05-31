@@ -1,5 +1,5 @@
 ﻿import {createElement} from "react";
-import {IBasicProject, IDetailedProject, ITile, IView} from "./models";
+import {IBasicProject, IDetailedProject, ITile, IView} from "../Shared/models";
 import {selectView} from "./settings.core";
 
 

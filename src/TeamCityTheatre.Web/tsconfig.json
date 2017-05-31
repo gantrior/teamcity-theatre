@@ -11,9 +11,8 @@
     "noEmitOnError": true,
     "noEmitHelpers": true,
     "noUnusedLocals": true,
-    "outDir": "./AppCompiled",
     "removeComments": false,
-    "sourceMap": true,
+    "sourceMap": false,
     "strictNullChecks": true,
     "target": "es5",
     "typeRoots": [
@@ -21,8 +20,8 @@
     ]
   },
   "include": [
-    "./app/**/*.ts",
-    "./app/**/*.tsx"
+    "./Views/**/*.ts",
+    "./Views/**/*.tsx"
   ],
   "exclude": [
     "node_modules",

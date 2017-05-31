@@ -33,4 +33,3 @@ export var state = Observable.combineLatest(allViews.startWith(null), selectedVi
         selectedViewData: viewData
     };
 });
-//# sourceMappingURL=dashboard.core.js.map

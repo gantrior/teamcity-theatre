@@ -8,7 +8,7 @@ import "rxjs/add/observable/dom/ajax";
 import "rxjs/add/operator/switchMap";
 import "rxjs/add/operator/startWith";
 
-import {IBasicProject, IDetailedProject, IView} from "./models";
+import {IBasicProject, IDetailedProject, IView} from "../Shared/models";
 
 export interface ISettingsState {
   views: IView[] | null;

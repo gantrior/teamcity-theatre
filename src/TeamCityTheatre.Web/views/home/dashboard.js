@@ -5,4 +5,3 @@ import { Dashboard } from "./dashboard.components";
 import { state } from "./dashboard.core";
 var root = document.getElementById("root");
 state.subscribe(function (s) { return render(createElement(Dashboard, tslib_1.__assign({}, s)), root); });
-//# sourceMappingURL=dashboard.js.map

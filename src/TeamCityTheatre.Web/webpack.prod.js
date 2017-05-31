@@ -3,8 +3,8 @@ const path = require("path");
 
 module.exports = {
   entry: {
-    "dashboard": "./AppCompiled/Dashboard.js",
-    "settings": "./AppCompiled/Settings.js"
+    "dashboard": "./views/home/dashboard.js",
+    "settings": "./views/home/settings.js"
   },
   output: {
     path: path.resolve(__dirname, "wwwroot/js"),
