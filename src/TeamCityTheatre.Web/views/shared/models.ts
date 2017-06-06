@@ -80,4 +80,9 @@ export class Project {
   hasChildren() {
     return this.children.length > 0;
   }
+
+  getLabel() : string {
+    if(this.parent === null) return this.name;
+    return [this.parent.getLabel(), this.name].join(" / ");
+  }
 }

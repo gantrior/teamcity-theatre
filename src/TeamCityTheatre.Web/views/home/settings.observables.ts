@@ -9,6 +9,7 @@ import "rxjs/add/operator/do";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/merge";
 import "rxjs/add/operator/scan";
+import "rxjs/add/operator/share";
 import "rxjs/add/operator/startWith";
 import "rxjs/add/operator/switchMap";
 
@@ -60,9 +61,11 @@ export const updateProject = (project: Project) => manualProjectUpdates.next(pro
 
 const selectedProjects: Observable<Project> = selectedProjectsSubject
   .switchMap(project => Observable.ajax.getJSON<IDetailedProject>(`api/projects/${project.id}`)
-    .map(detailedProject => project.withBuildConfigurations(detailedProject.buildConfigurations)))
-  .do(x => console.log(`Selected a project: ${x.name}`))
-  .startWith(null);
+    .map(detailedProject => project.withBuildConfigurations(detailedProject.buildConfigurations))
+    .startWith(null))
+  .do(x => console.log(`Selected a project: ${x ? x.name : null}`))
+  .startWith(null)
+  .share();
 
 const projectUpdates : Observable<Project> = manualProjectUpdates.merge(selectedProjects)
   .do(x => console.log(`Registered update for project: ${x ? x.name : null}`));

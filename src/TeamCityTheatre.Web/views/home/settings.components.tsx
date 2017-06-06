@@ -3,6 +3,7 @@ import {IView} from "../shared/contracts";
 import {Views} from "./settings.components.views";
 import {SelectedView} from "./settings.components.selected-view";
 import {Projects} from "./settings.components.projects";
+import {SelectedProject} from "./settings.components.selected-project";
 import {Project} from "../shared/models";
 
 export const Settings = (props: { views: IView[] | null, selectedView: IView | null, rootProject: Project | null, selectedProject: Project | null }) => {
@@ -14,7 +15,7 @@ export const Settings = (props: { views: IView[] | null, selectedView: IView | n
       </div>
       <div id="projects-section" className="section row">
         <div className="col-md-4"><Projects rootProject={props.rootProject} selectedProject={props.selectedProject}/></div>
-        <div className="col-md-8"><div>TODO</div></div>
+        <div className="col-md-8"><SelectedProject selectedProject={props.selectedProject} selectedView={props.selectedView} /></div>
       </div>
     </div>
   );

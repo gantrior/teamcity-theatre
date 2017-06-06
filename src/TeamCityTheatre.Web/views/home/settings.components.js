@@ -2,6 +2,7 @@ import { createElement } from "react";
 import { Views } from "./settings.components.views";
 import { SelectedView } from "./settings.components.selected-view";
 import { Projects } from "./settings.components.projects";
+import { SelectedProject } from "./settings.components.selected-project";
 export var Settings = function (props) {
     return (createElement("div", { id: "config" },
         createElement("div", { id: "views-section", className: "section row" },
@@ -13,5 +14,5 @@ export var Settings = function (props) {
             createElement("div", { className: "col-md-4" },
                 createElement(Projects, { rootProject: props.rootProject, selectedProject: props.selectedProject })),
             createElement("div", { className: "col-md-8" },
-                createElement("div", null, "TODO")))));
+                createElement(SelectedProject, { selectedProject: props.selectedProject, selectedView: props.selectedView })))));
 };

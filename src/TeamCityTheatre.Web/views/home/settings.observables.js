@@ -7,6 +7,7 @@ import "rxjs/add/operator/do";
 import "rxjs/add/operator/map";
 import "rxjs/add/operator/merge";
 import "rxjs/add/operator/scan";
+import "rxjs/add/operator/share";
 import "rxjs/add/operator/startWith";
 import "rxjs/add/operator/switchMap";
 import { Project } from "../shared/models";
@@ -40,9 +41,11 @@ var manualProjectUpdates = new Subject();
 export var updateProject = function (project) { return manualProjectUpdates.next(project); };
 var selectedProjects = selectedProjectsSubject
     .switchMap(function (project) { return Observable.ajax.getJSON("api/projects/" + project.id)
-    .map(function (detailedProject) { return project.withBuildConfigurations(detailedProject.buildConfigurations); }); })
-    .do(function (x) { return console.log("Selected a project: " + x.name); })
-    .startWith(null);
+    .map(function (detailedProject) { return project.withBuildConfigurations(detailedProject.buildConfigurations); })
+    .startWith(null); })
+    .do(function (x) { return console.log("Selected a project: " + (x ? x.name : null)); })
+    .startWith(null)
+    .share();
 var projectUpdates = manualProjectUpdates.merge(selectedProjects)
     .do(function (x) { return console.log("Registered update for project: " + (x ? x.name : null)); });
 var rootProjects = initialRootProjects.switchMap(function (initialRootProject) {

@@ -43,6 +43,11 @@ var Project = (function () {
     Project.prototype.hasChildren = function () {
         return this.children.length > 0;
     };
+    Project.prototype.getLabel = function () {
+        if (this.parent === null)
+            return this.name;
+        return [this.parent.getLabel(), this.name].join(" / ");
+    };
     return Project;
 }());
 export { Project };
