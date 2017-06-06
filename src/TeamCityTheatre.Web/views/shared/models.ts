@@ -1,107 +1,78 @@
-﻿export type Guid = string;
+import {IBasicBuildConfiguration, IBasicProject} from "./contracts";
 
-export interface IView {
-  id: Guid;
-  name: string;
-  defaultNumberOfBranchesPerTile: number;
-  tiles: ITile[];
+interface IProjectConstructorParameters extends IBasicProject {
+  children? : Project[] | null
+  buildConfigurations?: IBasicBuildConfiguration[] | null;
 }
 
-export interface ITile {
-  id: Guid;
-  label: string;
-  buildConfigurationId: string;
-  buildConfigurationDisplayName: string;
-}
-
-export interface IViewData {
-  id: Guid;
-  tiles: ITileData[];
-}
-
-export interface ITileData {
-  id: Guid;
-  label: string;
-  builds: IDetailedBuild[];
-  combinedBuildStatus: BuildStatus;
-}
-
-export interface IBasicBuild {
-  id: string;
-  buildConfigurationId: string;
-  percentageComplete: number;
-  elapsedSeconds: number;
-  estimatedTotalSeconds: number;
-  currentStageText: string;
-  number: string;
-  status: BuildStatus;
-  state: string;
-  branchName: string;
-  isDefaultBranch: boolean;
-  href: string;
-  webUrl: string;
-}
-
-export interface IDetailedBuild extends IBasicBuild {
-  statusText: string;
-  buildConfiguration: IBasicBuildConfiguration;
-  queuedDate: string;
-  startDate: string;
-  finishDate: string;
-  lastChanges: IDetailedBuildChange[];
-  agent: IBasicAgent;
-  properties: IPropery[];
-  snapshotDependencies: IBasicBuild[];
-  artifactDependencies: IBasicBuild[];
-}
-
-export enum BuildStatus {
-  Unknown,
-  Success,
-  Failure,
-  Error
-}
-
-export interface IBasicBuildConfiguration {
-  id: string;
-  name: string;
-  projectId: string;
-  href: string;
-  webUrl: string;
-}
-
-export interface IDetailedBuildChange {
-  id: string;
-  version: string;
-  username: string;
-  date: string;
-  href: string;
-  webLink: string;
-}
-
-export interface IBasicAgent {
-  id: string;
-  name: string;
-  typeId: string;
-  href: string;
-}
-
-export interface IPropery {
-  name: string;
-  value: string;
-}
-
-export interface IBasicProject {
+export class Project {
   isArchived: boolean;
   href: string;
   id: string;
   name: string;
-  description: string;
+  description: string | null;
   webUrl: string;
-  parentProjectId: string;
-}
+  parentProjectId : string | null;
+  children: Project[];
+  isExpanded: boolean;
+  buildConfigurations: IBasicBuildConfiguration[] | null;
 
-export interface IDetailedProject extends IBasicProject {
-  parentProject: IBasicProject
-  buildConfigurations: IBasicBuildConfiguration[];
+  constructor(params: IProjectConstructorParameters) {
+    if(!params) throw new Error("Invalid constructor parameters in BasicProject: params");
+    this.isArchived = params.isArchived;
+    this.href = params.href;
+    this.id = params.id;
+    this.name = params.name;
+    this.description = params.description;
+    this.webUrl = params.webUrl;
+    this.parentProjectId = params.parentProjectId;
+    this.children = params.children || [];
+    this.buildConfigurations = params.buildConfigurations || null;
+    this.isExpanded = false;
+  }
+
+  withChildren(children: Project[]) {
+    return new Project({
+      ...(this as Project),
+      children: children
+    });
+  }
+
+  withBuildConfigurations(buildConfigurations: IBasicBuildConfiguration[]) {
+    return new Project({
+      ...(this as Project),
+      buildConfigurations: buildConfigurations
+    });
+  }
+
+  expand() {
+    return new Project({
+      ...(this as Project),
+      isExpanded: true
+    });
+  }
+
+  collapse() {
+    return new Project({
+      ...(this as Project),
+      isExpanded: false
+    });
+  }
+
+  toggleExpandOrCollapse() {
+    return this.isExpanded ? this.collapse() : this.expand();
+  }
+
+  // propagate updates to a project down the chain
+  withProject(project: Project) : Project {
+    if(this.id === project.id) return project; // if this is the project that was updated, return the new version
+    return new Project({
+      ...(this as Project),
+      children: this.children.map(c => c.withProject(project))
+    });
+  }
+
+  hasChildren() {
+    return this.children.length > 0;
+  }
 }

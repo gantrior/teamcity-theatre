@@ -1,6 +1,6 @@
 import { createElement } from "react";
-import { selectView } from "./dashboard.core";
-import { BuildStatus } from "../Shared/models";
+import { selectView } from "./dashboard.observables";
+import { BuildStatus } from "../shared/contracts";
 import * as parse from "date-fns/parse";
 import * as addSeconds from "date-fns/add_seconds";
 import * as distanceInWordsToNow from "date-fns/distance_in_words_to_now";

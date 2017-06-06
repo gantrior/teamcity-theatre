@@ -2,7 +2,7 @@
 import { render } from "react-dom";
 
 import { Dashboard } from "./dashboard.components";
-import { state } from "./dashboard.core";
+import { state } from "./dashboard.observables";
 
 const root = document.getElementById("root");
 

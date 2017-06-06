@@ -14,7 +14,7 @@ import "rxjs/add/operator/repeat";
 import "rxjs/add/operator/switchMap";
 import "rxjs/add/operator/startWith";
 
-import {IView, IViewData} from "../Shared/models";
+import {IView, IViewData} from "../shared/contracts";
 
 // fetching the initial set of views
 
