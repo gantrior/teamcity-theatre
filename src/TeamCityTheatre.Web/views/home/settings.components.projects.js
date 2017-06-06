@@ -5,13 +5,14 @@ export var Projects = function (props) {
         return (createElement("div", null,
             createElement("i", { className: "fa fa-spin fa-cog" }),
             " Loading projects"));
-    return (createElement("div", { className: "panel panel-default" },
-        createElement("div", { className: "panel-heading" },
-            createElement("h3", { className: "panel-title" }),
-            createElement("h2", null, "Available projects")),
-        createElement("div", { className: "panel-body" },
-            createElement("ul", { className: "list-unstyled" },
-                createElement(Project, { project: props.rootProject, selectedProject: props.selectedProject })))));
+    return (createElement("div", { id: "projects-wrapper" },
+        createElement("div", { className: "panel panel-default" },
+            createElement("div", { className: "panel-heading" },
+                createElement("h3", { className: "panel-title" }),
+                createElement("h2", null, "Available projects")),
+            createElement("div", { className: "panel-body" },
+                createElement("ul", { className: "list-unstyled" },
+                    createElement(Project, { project: props.rootProject, selectedProject: props.selectedProject }))))));
 };
 // recursive components require type annotations
 var Project = function (props) {

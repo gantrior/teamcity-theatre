@@ -23,14 +23,15 @@
     "webpack": "^2.5.1"
   },
   "scripts": {
-    "clean": "rimraf views/**/*.js views/**/*.js.map views/**/*.css",
+    "clean": "rimraf views/**/*.js views/**/*.js.map",
     "ts": "tsc --pretty",
-    "js": "webpack --config=webpack.dev.js --progress --colors",
-    "pcss": "postcss views/**/*.pcss --use postcss-nested --dir wwwroot/css --no-map true",
+    "js": "webpack --config=webpackconfig.js --progress --colors",
+    "pcss": "postcss views/**/*.pcss --use postcss-nested --dir wwwroot/css --ext=.css --no-map true",
     "watch:ts": "npm run ts -- --watch",
     "watch:js": "npm run js -- --watch=true",
-    "watch:css": "npm run css -- --watch=true",
+    "watch:pcss": "npm run pcss -- --watch=true",
 
-    "prod": "npm run ts && npm run pcss && npm run js -- --config=webpack.prod.js"
+    "build:debug": "npm run clean && npm run ts && npm run pcss && npm run js",
+    "build:release": "npm run clean && npm run ts && npm run pcss && npm run js -- --env=production"
   }
 }

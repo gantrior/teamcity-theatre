@@ -2,6 +2,7 @@
   display: initial;
 
   #projects-section {
+
   }
 }
 
@@ -25,6 +26,28 @@
           color: #eee;
         }
       }
+    }
+  }
+}
+
+#projects-wrapper {
+  .project {
+    margin: 5px;
+
+    > .toggle-children-button {
+      visibility: hidden;
+    }
+
+    > .project-name {
+      margin-left: 5px;
+    }
+
+    > .project-children {
+      list-style: none;
+    }
+
+    &.has-children > .toggle-children-button {
+      visibility: visible;
     }
   }
 }

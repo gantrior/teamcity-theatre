@@ -15,13 +15,14 @@ var Projects = function (props) {
         return (__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])("div", null,
             __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])("i", { className: "fa fa-spin fa-cog" }),
             " Loading projects"));
-    return (__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])("div", { className: "panel panel-default" },
-        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])("div", { className: "panel-heading" },
-            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])("h3", { className: "panel-title" }),
-            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])("h2", null, "Available projects")),
-        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])("div", { className: "panel-body" },
-            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])("ul", { className: "list-unstyled" },
-                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])(Project, { project: props.rootProject, selectedProject: props.selectedProject })))));
+    return (__webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])("div", { id: "projects-wrapper" },
+        __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])("div", { className: "panel panel-default" },
+            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])("div", { className: "panel-heading" },
+                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])("h3", { className: "panel-title" }),
+                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])("h2", null, "Available projects")),
+            __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])("div", { className: "panel-body" },
+                __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])("ul", { className: "list-unstyled" },
+                    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_0_react__["createElement"])(Project, { project: props.rootProject, selectedProject: props.selectedProject }))))));
 };
 // recursive components require type annotations
 var Project = function (props) {
@@ -196,7 +197,7 @@ __WEBPACK_IMPORTED_MODULE_5__settings_observables__["a" /* state */].subscribe({
 var Project = (function () {
     function Project(params) {
         if (!params)
-            throw new Error("Invalid constructor parameters in BasicProject: params");
+            throw new Error("Invalid constructor parameters: " + JSON.stringify(params));
         this.isArchived = params.isArchived;
         this.href = params.href;
         this.id = params.id;
@@ -204,12 +205,17 @@ var Project = (function () {
         this.description = params.description;
         this.webUrl = params.webUrl;
         this.parentProjectId = params.parentProjectId;
-        this.children = params.children || [];
-        this.buildConfigurations = params.buildConfigurations || null;
-        this.isExpanded = false;
+        this.parent = typeof params.parent === "undefined" ? null : params.parent;
+        this.children = typeof params.children === "undefined" ? [] : params.children;
+        this.buildConfigurations = typeof params.buildConfigurations === "undefined" ? [] : params.buildConfigurations;
+        this.isExpanded = typeof params.isExpanded === "undefined" ? false : params.isExpanded;
     }
-    Project.prototype.withChildren = function (children) {
-        return new Project(__WEBPACK_IMPORTED_MODULE_0_tslib__["a" /* __assign */]({}, this, { children: children }));
+    Project.prototype.setChildren = function (children) {
+        var _this = this;
+        // Building immutable trees is hard if the input is not topologically sorted.
+        // Avoid problems by doing only this little thing in a mutable way
+        this.children = children;
+        this.children.forEach(function (c) { return c.parent = _this; });
     };
     Project.prototype.withBuildConfigurations = function (buildConfigurations) {
         return new Project(__WEBPACK_IMPORTED_MODULE_0_tslib__["a" /* __assign */]({}, this, { buildConfigurations: buildConfigurations }));
@@ -224,10 +230,10 @@ var Project = (function () {
         return this.isExpanded ? this.collapse() : this.expand();
     };
     // propagate updates to a project down the chain
-    Project.prototype.withProject = function (project) {
+    Project.prototype.update = function (project) {
         if (this.id === project.id)
             return project; // if this is the project that was updated, return the new version
-        return new Project(__WEBPACK_IMPORTED_MODULE_0_tslib__["a" /* __assign */]({}, this, { children: this.children.map(function (c) { return c.withProject(project); }) }));
+        return new Project(__WEBPACK_IMPORTED_MODULE_0_tslib__["a" /* __assign */]({}, this, { children: this.children.map(function (c) { return c.update(project); }) }));
     };
     Project.prototype.hasChildren = function () {
         return this.children.length > 0;
@@ -289,12 +295,17 @@ var allViews = __WEBPACK_IMPORTED_MODULE_0_rxjs_Observable__["Observable"]
 var toProjects = function (basicProjects) {
     var projects = basicProjects.map(function (p) { return new __WEBPACK_IMPORTED_MODULE_11__shared_models__["a" /* Project */](p); });
     var findChildren = function (id) { return projects.filter(function (p) { return p.parentProjectId === id; }); };
-    return projects.map(function (p) { return p.withChildren(findChildren(p.id)); });
+    for (var _i = 0, projects_1 = projects; _i < projects_1.length; _i++) {
+        var project = projects_1[_i];
+        project.setChildren(findChildren(project.id));
+    }
+    return projects;
 };
 var initialRootProjects = __WEBPACK_IMPORTED_MODULE_0_rxjs_Observable__["Observable"]
     .defer(function () { return __WEBPACK_IMPORTED_MODULE_0_rxjs_Observable__["Observable"].ajax.getJSON("api/projects"); })
     .map(toProjects)
     .map(function (projects) { return projects.filter(function (p) { return p.parentProjectId === null; })[0]; })
+    .map(function (rootProject) { return rootProject.expand(); })
     .do(function (x) { return console.log("Initial root project loaded: " + x.name); });
 var selectedViewsSubject = new __WEBPACK_IMPORTED_MODULE_1_rxjs_Subject__["Subject"]();
 var selectView = function (view) { return selectedViewsSubject.next(view); };
@@ -314,7 +325,7 @@ var projectUpdates = manualProjectUpdates.merge(selectedProjects)
     .do(function (x) { return console.log("Registered update for project: " + (x ? x.name : null)); });
 var rootProjects = initialRootProjects.switchMap(function (initialRootProject) {
     return projectUpdates
-        .scan(function (previousRootProject, projectUpdate) { return projectUpdate !== null ? previousRootProject.withProject(projectUpdate) : previousRootProject; }, initialRootProject)
+        .scan(function (previousRootProject, projectUpdate) { return projectUpdate !== null ? previousRootProject.update(projectUpdate) : previousRootProject; }, initialRootProject)
         .startWith(initialRootProject);
 })
     .do(function (x) { return console.log("New root project"); });

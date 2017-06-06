@@ -1,21 +1,23 @@
-import {createElement, StatelessComponent } from "react";
+import {createElement, StatelessComponent} from "react";
 import {Project as ProjectModel} from "../shared/models";
 import {selectProject, updateProject} from "./settings.observables";
 
 export const Projects = (props: { rootProject: ProjectModel | null, selectedProject: ProjectModel | null }) => {
-  if(props.rootProject === null) return (
+  if (props.rootProject === null) return (
     <div><i className="fa fa-spin fa-cog"/> Loading projects</div>
   );
   return (
-    <div className="panel panel-default">
-      <div className="panel-heading">
-        <h3 className="panel-title">
-        </h3><h2>Available projects</h2>
-      </div>
-      <div className="panel-body">
-        <ul className="list-unstyled">
-          <Project project={props.rootProject} selectedProject={props.selectedProject}/>
-        </ul>
+    <div id="projects-wrapper">
+      <div className="panel panel-default">
+        <div className="panel-heading">
+          <h3 className="panel-title">
+          </h3><h2>Available projects</h2>
+        </div>
+        <div className="panel-body">
+          <ul className="list-unstyled">
+            <Project project={props.rootProject} selectedProject={props.selectedProject}/>
+          </ul>
+        </div>
       </div>
     </div>
   );

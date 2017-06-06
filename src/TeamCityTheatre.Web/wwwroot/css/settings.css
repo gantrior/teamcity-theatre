@@ -3,6 +3,7 @@
 }
 
   #config #projects-section {
+
   }
 
 #views-wrapper #views-table .view .view-name {
@@ -22,3 +23,23 @@
 #views-wrapper #views-table .view.selected > .view-name {
           color: #eee;
         }
+
+#projects-wrapper .project {
+    margin: 5px;
+  }
+
+#projects-wrapper .project > .toggle-children-button {
+      visibility: hidden;
+    }
+
+#projects-wrapper .project > .project-name {
+      margin-left: 5px;
+    }
+
+#projects-wrapper .project > .project-children {
+      list-style: none;
+    }
+
+#projects-wrapper .project.has-children > .toggle-children-button {
+      visibility: visible;
+    }

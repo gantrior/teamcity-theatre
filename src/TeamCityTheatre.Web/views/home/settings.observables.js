@@ -17,12 +17,17 @@ var allViews = Observable
 var toProjects = function (basicProjects) {
     var projects = basicProjects.map(function (p) { return new Project(p); });
     var findChildren = function (id) { return projects.filter(function (p) { return p.parentProjectId === id; }); };
-    return projects.map(function (p) { return p.withChildren(findChildren(p.id)); });
+    for (var _i = 0, projects_1 = projects; _i < projects_1.length; _i++) {
+        var project = projects_1[_i];
+        project.setChildren(findChildren(project.id));
+    }
+    return projects;
 };
 var initialRootProjects = Observable
     .defer(function () { return Observable.ajax.getJSON("api/projects"); })
     .map(toProjects)
     .map(function (projects) { return projects.filter(function (p) { return p.parentProjectId === null; })[0]; })
+    .map(function (rootProject) { return rootProject.expand(); })
     .do(function (x) { return console.log("Initial root project loaded: " + x.name); });
 var selectedViewsSubject = new Subject();
 export var selectView = function (view) { return selectedViewsSubject.next(view); };
@@ -42,7 +47,7 @@ var projectUpdates = manualProjectUpdates.merge(selectedProjects)
     .do(function (x) { return console.log("Registered update for project: " + (x ? x.name : null)); });
 var rootProjects = initialRootProjects.switchMap(function (initialRootProject) {
     return projectUpdates
-        .scan(function (previousRootProject, projectUpdate) { return projectUpdate !== null ? previousRootProject.withProject(projectUpdate) : previousRootProject; }, initialRootProject)
+        .scan(function (previousRootProject, projectUpdate) { return projectUpdate !== null ? previousRootProject.update(projectUpdate) : previousRootProject; }, initialRootProject)
         .startWith(initialRootProject);
 })
     .do(function (x) { return console.log("New root project"); });

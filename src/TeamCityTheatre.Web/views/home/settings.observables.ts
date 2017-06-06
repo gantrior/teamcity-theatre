@@ -29,14 +29,21 @@ const allViews: Observable<IView[] | null> = Observable
 
 const toProjects = (basicProjects: IBasicProject[]) => {
   const projects = basicProjects.map(p => new Project(p));
+
   const findChildren = (id: string) => projects.filter(p => p.parentProjectId === id);
-  return projects.map(p => p.withChildren(findChildren(p.id)));
+
+  for(let project of projects) {
+    project.setChildren(findChildren(project.id));
+  }
+
+  return projects;
 };
 
 const initialRootProjects: Observable<Project> = Observable
   .defer(() => Observable.ajax.getJSON<IBasicProject[]>("api/projects"))
   .map(toProjects)
   .map(projects => projects.filter(p => p.parentProjectId === null)[0])
+  .map(rootProject => rootProject.expand())
   .do(x => console.log(`Initial root project loaded: ${x.name}`));
 
 const selectedViewsSubject = new Subject<IView>();
@@ -62,7 +69,7 @@ const projectUpdates : Observable<Project> = manualProjectUpdates.merge(selected
 
 const rootProjects: Observable<Project> = initialRootProjects.switchMap(initialRootProject =>
   projectUpdates
-    .scan((previousRootProject, projectUpdate) => projectUpdate !== null ? previousRootProject.withProject(projectUpdate) : previousRootProject, initialRootProject)
+    .scan((previousRootProject, projectUpdate) => projectUpdate !== null ? previousRootProject.update(projectUpdate) : previousRootProject, initialRootProject)
     .startWith(initialRootProject))
   .do(x => console.log(`New root project`));
 
