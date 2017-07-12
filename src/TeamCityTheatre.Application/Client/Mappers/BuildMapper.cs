@@ -35,7 +35,7 @@ namespace TeamCityTheatre.Application.Client.Mappers {
         BuildConfigurationId = build.BuildTypeId,
         Agent = _agentMapper.Map(build.Agent),
         ArtifactDependencies = Map(build.ArtifactDependencies),
-        BranchName = build.BranchName,
+        BranchName = build.BranchName.Replace("pull-requests/", "PR/").Replace("bugfix/", "BF/").Replace("feature/", ""),
         BuildConfiguration = _buildConfigurationMapper.Map(build.BuildType),
         FinishDate = build.FinishDate,
         Href = build.Href,
