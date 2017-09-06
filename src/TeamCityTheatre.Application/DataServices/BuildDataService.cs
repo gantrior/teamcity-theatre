@@ -25,13 +25,23 @@ namespace TeamCityTheatre.Application.DataServices {
     }
 
     public async Task<IEnumerable<IDetailedBuild>> GetBuildsOfBuildConfigurationAsync(string buildConfigurationId, int count = 100) {
-      var request = new RestRequest("builds/?locator=branch:(default:any),running:any,count:{count},buildType:(id:{buildConfigurationId})" +
-                                    "&fields=count,build(id,buildTypeId,number,status,state,percentageComplete,branchName,href,webUrl," +
-                                    "running-info(percentageComplete,elapsedSeconds,estimatedTotalSeconds,currentStageText),queuedDate,startDate,finishDate)");
-      request.AddUrlSegment("count", Convert.ToString(count));
-      request.AddUrlSegment("buildConfigurationId", buildConfigurationId);
-      var response = await _teamCityClient.ExecuteRequestAsync<BuildsResponse>(request);
-      return _buildMapper.Map(response);
+        try
+        {
+            var request = new RestRequest(
+                "builds/?locator=branch:(default:any),running:any,count:{count},buildType:(id:{buildConfigurationId})" +
+                "&fields=count,build(id,buildTypeId,number,status,state,percentageComplete,branchName,href,webUrl," +
+                "running-info(percentageComplete,elapsedSeconds,estimatedTotalSeconds,currentStageText),queuedDate,startDate,finishDate)");
+            request.AddUrlSegment("count", Convert.ToString(count));
+            request.AddUrlSegment("buildConfigurationId", buildConfigurationId);
+            var response = await _teamCityClient.ExecuteRequestAsync<BuildsResponse>(request);
+            return _buildMapper.Map(response);
+        }
+        catch (Exception e)
+        {
+            var test = e;
+            throw;
+        }
+      
     }
 
     public async Task<IDetailedBuild> GetBuildDetailsAsync(int buildId) {

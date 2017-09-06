@@ -42,8 +42,9 @@ namespace TeamCityTheatre.Application.QueryServices
 
       private int CustomSort(string branchName)
       {
-          if (branchName.ToLower() == "develop" ||
-              branchName.ToLower() == "master")
+          if (branchName?.ToLower() == "develop" ||
+              branchName?.ToLower() == "master" ||
+              branchName?.ToLower() == "vNextDevelop")
           {
               return 1;
           }
