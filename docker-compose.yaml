@@ -1,0 +1,14 @@
+version: '3.6'
+services:
+  server:
+    build: ./dist
+    image: docker.dev.local/solarwinds/scm-teamcity:latest
+    restart: unless-stopped
+    ports:
+      - 8082:80
+    isolation: process
+     
+networks:
+  default:
+    external:
+      name: nat
